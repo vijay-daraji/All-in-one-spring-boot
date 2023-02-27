@@ -3,6 +3,8 @@ package com.vijay.springbootdemo.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 
 @Entity(name="user")
 public class UserEntity {
@@ -10,8 +12,12 @@ public class UserEntity {
 	@Id
 	@GeneratedValue
 	private int id;
+	@NotNull
+	@Email
 	private String email;
+	@NotNull
 	private String password;
+	@NotNull
 	private String role;
 	
 	public UserEntity() {

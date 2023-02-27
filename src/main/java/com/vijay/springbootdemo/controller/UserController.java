@@ -15,6 +15,8 @@ import com.vijay.springbootdemo.dto.UserResponse;
 import com.vijay.springbootdemo.entity.UserEntity;
 import com.vijay.springbootdemo.service.UserService;
 
+import jakarta.validation.Valid;
+
 
 @RestController
 public class UserController {
@@ -28,7 +30,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/users")
-	public UserResponse createUser(@RequestBody UserEntity user) {
+	public UserResponse createUser(@Valid @RequestBody UserEntity user) {
 		return userService.createUser(user);
 	}
 	
@@ -43,7 +45,7 @@ public class UserController {
 	}
 	
 	@PutMapping("/users/{email}")
-	public UserResponse updateUser(@PathVariable String email, @RequestBody UserEntity userEntity) {
+	public UserResponse updateUser(@PathVariable String email, @Valid @RequestBody UserEntity userEntity) {
 		return userService.updateUser(email,userEntity);
 	}
 	
