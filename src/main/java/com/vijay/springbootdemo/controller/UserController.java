@@ -3,6 +3,7 @@ package com.vijay.springbootdemo.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +28,18 @@ public class UserController {
 	@GetMapping("/welcome")
 	public String getMessage() {
 		return "Welcome to home page";
+	}
+	
+	@GetMapping("/admin/welcome")
+	@PreAuthorize("hasAuthority('ADMIN')")
+	public String welcomeAdmin() {
+		return "Welcome Admin";
+	}
+	
+	@GetMapping("/user/welcome")
+	@PreAuthorize("hasAuthority('USER')")
+	public String welcomeUser() {
+		return "Welcome User";
 	}
 	
 	@PostMapping("/users")

@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.vijay.springbootdemo.dto.UserResponse;
@@ -19,12 +20,16 @@ public class UserService {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	public UserResponse createUser(UserEntity user) {
 		Optional<UserEntity> userOptional = userRepository.findByEmail(user.getEmail());
 		if(userOptional.isPresent()) {
 			throw new UserAlreadyExistException("User Already exist with email : "+user.getEmail());
 		}
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		UserEntity userEntity = userRepository.save(user);
 		UserResponse userResponse = new UserResponse(userEntity.getId(),userEntity.getEmail(),userEntity.getRole());
 		return userResponse;
@@ -55,7 +60,7 @@ public class UserService {
 		}
 		UserEntity user = userOptional.get();
 		user.setEmail(userEntity.getEmail());
-		user.setPassword(userEntity.getPassword());
+		user.setPassword(passwordEncoder.encode(userEntity.getPassword()));
 		user.setRole(userEntity.getRole());
 		
 		UserEntity updatedUser = userRepository.save(user);
