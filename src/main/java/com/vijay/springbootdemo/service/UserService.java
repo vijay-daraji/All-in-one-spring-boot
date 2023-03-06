@@ -5,6 +5,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +27,12 @@ public class UserService {
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private JwtService jwtService; 
+	
+	@Autowired
+	private AuthenticationManager authenticationManager; 
 
 	public UserResponse createUser(UserEntity user) {
 		Optional<UserEntity> userOptional = userRepository.findByEmail(user.getEmail());
@@ -75,6 +85,16 @@ public class UserService {
 		}
 		userRepository.deleteById(userOptinal.get().getId());
 		return "User deleted";
+	}
+
+	public String authenticateAndGetToken(UserEntity user) {
+		Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+		if(authenticate.isAuthenticated()) {
+			return jwtService.generateToken(user.getEmail());
+		}
+		else {
+			throw new UsernameNotFoundException("Invalid user request!!");
+		}
 	}
 
 }

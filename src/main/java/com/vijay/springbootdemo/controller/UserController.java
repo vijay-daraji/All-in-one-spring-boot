@@ -66,5 +66,9 @@ public class UserController {
 	public String deleteUser(@PathVariable String email) {
 		return userService.deleteUser(email);
 	}
-
+	
+	@PostMapping("/users/auth/authenticate")
+	public String authenticateAndGetToken(@RequestBody UserEntity user) {
+		return userService.authenticateAndGetToken(user);
+	}
 }
